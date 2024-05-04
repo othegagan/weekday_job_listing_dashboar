@@ -14,16 +14,20 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
     return (
         <Card ref={ref} className='flex  flex-col gap-2 p-4 hover:shadow-md ' style={{ height: 'min-content' }}>
             <div className='flex w-full items-center justify-between'>
-                <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'>
+                <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight dark:border-neutral-800'>
                     <Clock3 className='size-3' /> Posted{' '}
                     {(() => {
-                        const days = Math.floor(Math.random() * 10 + 1);
+                        const daysArray = [2, 5, 7, 10, 3];
+                        const days = daysArray[Math.floor(Math.random() * daysArray.length)];
                         return `${days} day${days > 1 ? 's' : ''} ago`;
                     })()}
                 </div>
 
                 {jobData.minExp && jobData.minExp > 0 && (
-                    <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'> Min {jobData.minExp} years exp req.</div>
+                    <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight dark:border-neutral-800'>
+                        {' '}
+                        Min {jobData.minExp} years exp req.
+                    </div>
                 )}
             </div>
 
@@ -33,7 +37,7 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
                 </div>
 
                 <div className='flex flex-col'>
-                    <div className=' text-xs font-medium uppercase tracking-widest text-muted-foreground '> {jobData.companyName}</div>
+                    <div className=' text-muted-foreground text-xs font-medium uppercase tracking-widest '> {jobData.companyName}</div>
                     <div className='text-lg font-semibold'> {toTitleCase(jobData.jobRole || '')}</div>
                     <div className=' text-xs font-medium capitalize'> {jobData.location}</div>
                 </div>

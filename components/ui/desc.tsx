@@ -16,7 +16,7 @@ export default function Desc({ data }: { data: string }) {
                     {isExpanded ? 'View Less' : 'View More'}
                 </Button>
             ) : (
-                <div className='absolute bottom-0 left-1/2 flex  w-full  -translate-x-1/2 transform items-center justify-center bg-gradient-to-b from-transparent to-white text-xs '>
+                <div className='absolute bottom-0 left-1/2 flex  w-full  -translate-x-1/2 transform items-center justify-center bg-gradient-to-b from-transparent to-white text-xs dark:bg-gradient-to-b dark:from-transparent dark:to-neutral-900 '>
                     <Button onClick={toggleExpansion} variant='outline' size='sm' className='-mt-1.5'>
                         {isExpanded ? 'View Less' : 'View More'}
                     </Button>
