@@ -4,6 +4,7 @@ import { Card, CardFooter } from '@/components/ui/card';
 import { Job } from '@/hooks/useJobSearch';
 import { toTitleCase } from '@/lib/utils';
 import { Clock3, Zap } from 'lucide-react';
+import Desc from './ui/desc';
 
 interface JobCardProps {
     jobData: Job;
@@ -11,13 +12,19 @@ interface JobCardProps {
 
 const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
     return (
-        <Card ref={ref} className='flex min-w-[350px] flex-col gap-2 p-4 hover:shadow-md '>
+        <Card ref={ref} className='flex  flex-col gap-2 p-4 hover:shadow-md '>
             <div className='flex w-full items-center justify-between'>
                 <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'>
-                    <Clock3 className='size-3' /> Posted 10 days ago
+                    <Clock3 className='size-3' /> Posted{' '}
+                    {(() => {
+                        const days = Math.floor(Math.random() * 10 + 1);
+                        return `${days} day${days > 1 ? 's' : ''} ago`;
+                    })()}
                 </div>
 
-                <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'> Min {jobData.minExp} years exp req.</div>
+                {jobData.minExp && jobData.minExp > 0 && (
+                    <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'> Min {jobData.minExp} years exp req.</div>
+                )}
             </div>
 
             <div className='flex items-center gap-2'>
@@ -26,7 +33,7 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
                 </div>
 
                 <div className='flex flex-col'>
-                    <div className=' text-muted-foreground text-xs font-medium uppercase tracking-widest '> {jobData.companyName}</div>
+                    <div className=' text-xs font-medium uppercase tracking-widest text-muted-foreground '> {jobData.companyName}</div>
                     <div className='text-lg font-semibold'> {toTitleCase(jobData.jobRole || '')}</div>
                     <div className=' text-xs font-medium capitalize'> {jobData.location}</div>
                 </div>
@@ -35,14 +42,16 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
             <p>
                 Estimated Salary :
                 <span className='font-semibold'>
-                    {jobData.minJdSalary}K - {jobData.maxJdSalary}K <span className='uppercase'>{jobData.salaryCurrencyCode}</span>
+                    {jobData.minJdSalary && jobData.maxJdSalary ? `${jobData.minJdSalary}K - ${jobData.maxJdSalary}K` : 'Salary not disclosed'}
+                    {jobData.salaryCurrencyCode && <span className='uppercase'> {jobData.salaryCurrencyCode}</span>}
                 </span>
                 ✅
             </p>
 
             <h5>About Company:</h5>
-            <p className='truncate text-xs'>{jobData.jobDetailsFromCompany}</p>
-            <CardFooter className='grid grid-cols-1 gap-2.5 p-0'>
+            <Desc data={jobData.jobDetailsFromCompany || ''} />
+
+            <CardFooter className='mt-2 grid grid-cols-1 gap-2.5 p-0'>
                 <Button variant='apply' className='flex items-center gap-2 font-semibold'>
                     <Zap className='size-4 ' /> Ease Apply
                 </Button>
