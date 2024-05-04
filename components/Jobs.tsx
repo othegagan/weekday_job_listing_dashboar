@@ -3,6 +3,7 @@
 import useBookSearch, { Job } from '@/hooks/useJobSearch';
 import { useCallback, useRef, useState } from 'react';
 import JobCard from './JobCard';
+import { CardsSkeleton } from './ui/skleton';
 
 export default function Jobs() {
     const [pageNumber, setPageNumber] = useState(9);
@@ -25,7 +26,7 @@ export default function Jobs() {
 
     return (
         <div className='flex flex-col gap-3'>
-            <div className='grid grid-cols-1 gap-4 py-4 md:grid-cols-2 lg:grid-cols-3 md:gap-6 lg:py-6'>
+            <div className='grid grid-cols-1 gap-4 py-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:py-6'>
                 {jobs.map((job: Job, index) => {
                     if (jobs.length === index + 1) {
                         return <JobCard ref={lastJobElementRef} key={index} jobData={job} />;
@@ -35,7 +36,7 @@ export default function Jobs() {
                 })}
             </div>
 
-            {loading && <div className='loader mx-auto w-10'></div>}
+            {loading && <CardsSkeleton />}
 
             {!loading && error && <p> Something went wrong..! 😥 Please Try again.</p>}
         </div>
