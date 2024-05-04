@@ -16,7 +16,7 @@ export interface Job {
     logoUrl?: string | null;
 }
 
-export default function useBookSearch(pageNumber: number) {
+export default function useJobSearch(pageNumber?: number) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -27,38 +27,38 @@ export default function useBookSearch(pageNumber: number) {
         setError(false);
         let cancel: Canceler;
 
-        let headersList = {
-            'Content-Type': 'application/json',
-        };
+        const fetchData = async () => {
+            try {
+                const response = await axios.post(
+                    'https://api.weekday.technology/adhoc/getSampleJdJSON',
+                    { limit: 9, offset: pageNumber },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        cancelToken: new axios.CancelToken(c => (cancel = c)),
+                    },
+                );
 
-        let bodyContent = JSON.stringify({
-            limit: 9,
-            offset: pageNumber,
-        });
-
-        let reqOptions = {
-            url: 'https://api.weekday.technology/adhoc/getSampleJdJSON',
-            method: 'POST',
-            headers: headersList,
-            data: bodyContent,
-            cancelToken: new axios.CancelToken(c => (cancel = c)),
-        };
-
-        axios
-            .request(reqOptions)
-            .then(res => {
-                setJobs((preJobs: Job[]) => {
-                    return [...preJobs, ...res.data.jdList.map((jd: Job) => jd)];
+                setJobs(prevJobs => {
+                    const newJobs = response.data.jdList.map((jd: Job) => jd);
+                    return pageNumber && pageNumber > 1 ? [...prevJobs, ...newJobs] : newJobs;
                 });
-                setHasMore(res.data.totalCount > pageNumber);
+
+                setHasMore(response.data.totalCount > (pageNumber || 9));
                 setLoading(false);
-            })
-            .catch(e => {
-                if (axios.isCancel(e)) return;
+            } catch (error) {
+                if (axios.isCancel(error)) return;
                 setError(true);
-            });
-        return () => cancel();
+            }
+        };
+
+        fetchData();
+
+        return () => {
+            if (cancel) cancel();
+        };
     }, [pageNumber]);
 
-    return { loading, error, jobs, hasMore };
+    return { loading, error, jobs, hasMore, setLoading, setError, setJobs, setHasMore };
 }
