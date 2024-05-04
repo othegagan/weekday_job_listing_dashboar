@@ -47,7 +47,7 @@
 
 @layer base {
     * {
-        @apply border-border scroll-smooth;
+        @apply scroll-smooth;
     }
 
     body {
@@ -55,7 +55,7 @@
     }
 
     .max-container {
-        @apply mx-auto w-[1240px] max-w-full px-4;
+        @apply mx-auto w-[1440px] max-w-full px-4;
     }
 
     h1 {

@@ -1,5 +1,6 @@
-import Image from 'next/image';
+
+import Jobs from '@/components/Jobs';
 
 export default function Home() {
-    return <div>Hello their..!</div>;
+    return <Jobs />;
 }
