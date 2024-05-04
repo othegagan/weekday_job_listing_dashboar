@@ -1,7 +1,7 @@
 'use client';
 
 import useJobSearch, { Job } from '@/hooks/useJobSearch';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import JobCard from './JobCard';
 import { CardsSkeleton } from './ui/skleton';
 import JobSearch from './job-filters/JobSearchInput';
@@ -58,11 +58,12 @@ export default function Jobs() {
         );
     }, [jobs, searchTerm]);
 
-    
     return (
         <div className='flex flex-col gap-3'>
             {jobs.length}
-            <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+            <Suspense>
+                <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+            </Suspense>
             <div className='grid grid-cols-1 gap-4 py-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:py-6'>
                 {filteredJobs.map((job: Job, index) => {
                     return <JobCard key={index} jobData={job} />;
