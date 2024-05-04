@@ -7,7 +7,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
     title: 'Nextlink | Job Listing Platform',
-    description: '',
+    description:
+        'Discover your next opportunity on Nextlink, the leading job listing platform. Browse thousands of job offers and find the best match for your professional skills.',
 };
 
 export default function RootLayout({

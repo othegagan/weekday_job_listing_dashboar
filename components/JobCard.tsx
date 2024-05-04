@@ -12,7 +12,7 @@ interface JobCardProps {
 
 const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
     return (
-        <Card ref={ref} className='flex  flex-col gap-2 p-4 hover:shadow-md '>
+        <Card ref={ref} className='flex  flex-col gap-2 p-4 hover:shadow-md ' style={{ height: 'min-content' }}>
             <div className='flex w-full items-center justify-between'>
                 <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight'>
                     <Clock3 className='size-3' /> Posted{' '}
@@ -28,7 +28,7 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
             </div>
 
             <div className='flex items-center gap-2'>
-                <div className='relative size-14 overflow-clip rounded-md bg-green-400'>
+                <div className='relative size-14 overflow-clip rounded-md'>
                     <img src={jobData.logoUrl || ''} className='absolute top-0 h-full w-full object-cover' alt={jobData.companyName} />
                 </div>
 
@@ -42,10 +42,10 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
             <p>
                 Estimated Salary :
                 <span className='font-semibold'>
-                    {jobData.minJdSalary && jobData.maxJdSalary ? `${jobData.minJdSalary}K - ${jobData.maxJdSalary}K` : 'Salary not disclosed'}
-                    {jobData.salaryCurrencyCode && <span className='uppercase'> {jobData.salaryCurrencyCode}</span>}
+                    {jobData.minJdSalary && jobData.maxJdSalary
+                        ? ` ${jobData.minJdSalary}K - ${jobData.maxJdSalary}K ${jobData.salaryCurrencyCode ? ' ' + jobData.salaryCurrencyCode.toUpperCase() + '✅' : ''}`
+                        : ' Salary not disclosed ❌'}
                 </span>
-                ✅
             </p>
 
             <h5>About Company:</h5>

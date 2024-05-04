@@ -55,7 +55,7 @@
     }
 
     .max-container {
-        @apply mx-auto w-[1440px] max-w-full px-4;
+        @apply mx-auto w-[1330px] max-w-full px-4;
     }
 
     h1 {
