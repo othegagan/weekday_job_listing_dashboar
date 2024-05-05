@@ -1,8 +1,5 @@
 'use client';
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronDown } from 'lucide-react';
-
 export default function ExperienceFilter({ setMinexp, minexp }: { setMinexp: (value: string) => void; minexp: string }) {
     const handleMinexpChange = (value: string) => {
         setMinexp(value);

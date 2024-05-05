@@ -8,6 +8,7 @@ import LocationFilter from './job-filters/LocationFilter';
 import JobCard from './JobCard';
 import { CardsSkeleton } from './ui/skleton';
 import ExperienceFilter from './job-filters/ExperienceFilter';
+import MinSalaryFilter from './job-filters/MinSalaryFilter';
 
 export default function Jobs() {
     const [pageNumber, setPageNumber] = useState(9);
@@ -55,8 +56,13 @@ export default function Jobs() {
             filterdJobs = filterdJobs.filter(job => job.location && locations.some(loc => loc && job?.location?.toLowerCase().includes(loc)));
         }
 
+        if (minSalary) {
+            const minSalaryNum = parseInt(minSalary, 10);
+            filterdJobs = filterdJobs.filter(job => job.minJdSalary && parseInt(job.minJdSalary.toString(), 10) >= minSalaryNum);
+        }
+
         if (minexp) {
-            const minExpNum = parseInt(minexp);
+            const minExpNum = parseInt(minexp, 10);
             filterdJobs = filterdJobs.filter(job => job.minExp && job.minExp >= minExpNum);
         }
 
@@ -71,6 +77,7 @@ export default function Jobs() {
                         <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                         <LocationFilter setLocation={setLocation} location={location} jobs={jobs} />
                         <ExperienceFilter setMinexp={setMinexp} minexp={minexp} />
+                        <MinSalaryFilter setMinSalary={setMinSalary} minSalary={minSalary} />
                     </div>
                 </Suspense>
             </div>
