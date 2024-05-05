@@ -9,6 +9,7 @@ import JobCard from './JobCard';
 import { CardsSkeleton } from './ui/skleton';
 import ExperienceFilter from './job-filters/ExperienceFilter';
 import MinSalaryFilter from './job-filters/MinSalaryFilter';
+import ResetFilers from './job-filters/ResetFilers';
 
 export default function Jobs() {
     const [pageNumber, setPageNumber] = useState(9);
@@ -28,8 +29,8 @@ export default function Jobs() {
             const html = document.documentElement;
             const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
             const windowBottom = windowHeight + window.pageYOffset;
-            if (windowBottom >= docHeight && !loading && hasMore) {
-                setPageNumber(prevPageNumber => prevPageNumber + 1);
+            if (windowBottom + 1 >= docHeight && !loading && hasMore) {
+                setPageNumber(prevPageNumber => prevPageNumber + 9);
             }
         };
 
@@ -78,6 +79,7 @@ export default function Jobs() {
                         <LocationFilter setLocation={setLocation} location={location} jobs={jobs} />
                         <ExperienceFilter setMinexp={setMinexp} minexp={minexp} />
                         <MinSalaryFilter setMinSalary={setMinSalary} minSalary={minSalary} />
+                        <ResetFilers setMinSalary={setMinSalary} setMinexp={setMinexp} setLocation={setLocation} setSearchTerm={setSearchTerm} />
                     </div>
                 </Suspense>
             </div>

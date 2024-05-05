@@ -18,7 +18,7 @@ const JobSearch: FC<Props> = ({ setSearchTerm, searchTerm }) => {
         setSearchTerm('');
     };
     return (
-        <div className='relative w-full md:w-[500px]'>
+        <div className='relative w-full md:w-2/5'>
             <SearchIcon className='absolute left-2.5 top-2.5 size-4 text-neutral-600' />
             <Input
                 type='text'
