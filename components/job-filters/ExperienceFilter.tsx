@@ -9,7 +9,7 @@ export default function ExperienceFilter({ setMinexp, minexp }: { setMinexp: (va
         <>
             <div className='flex flex-col gap-4 rounded-md border border-dotted border-input px-3 py-1'>
                 <div className='flex items-center gap-3 text-sm'>
-                    Experience
+                  Min Experience
                     <select
                         className='w-[100px] rounded-md border border-input px-2 py-1 text-xs'
                         name='minexp'
