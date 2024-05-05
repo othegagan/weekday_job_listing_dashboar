@@ -12,7 +12,6 @@ import ExperienceFilter from './job-filters/ExperienceFilter';
 export default function Jobs() {
     const [pageNumber, setPageNumber] = useState(9);
     const [searchTerm, setSearchTerm] = useQueryState('search', { defaultValue: '', history: 'replace' });
-    const [role, setRole] = useQueryState('role', { defaultValue: '', history: 'replace' });
     const [location, setLocation] = useQueryState('location', { defaultValue: '', history: 'replace' });
     const [minSalary, setMinSalary] = useQueryState('minsalary', { defaultValue: '', history: 'replace' });
     const [minexp, setMinexp] = useQueryState('minexp', { defaultValue: '', history: 'replace' });
@@ -41,21 +40,19 @@ export default function Jobs() {
 
     useEffect(() => {
         fitlerJobs();
-    }, [searchTerm, location, role, jobs, minSalary, minexp]);
+    }, [searchTerm, location, jobs, minSalary, minexp]);
 
     const fitlerJobs = () => {
         let filterdJobs = jobs;
 
         if (searchTerm) {
-            filterdJobs = filterdJobs.filter(job => job.companyName.toLowerCase().includes(searchTerm.toLowerCase()));
+            filterdJobs = filterdJobs.filter(
+                job => job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) || job.jobRole?.toLowerCase().includes(searchTerm.toLowerCase()),
+            );
         }
         if (location) {
             const locations = location.toLowerCase().split(',');
             filterdJobs = filterdJobs.filter(job => job.location && locations.some(loc => loc && job?.location?.toLowerCase().includes(loc)));
-        }
-        if (role) {
-            const roles = role.toLowerCase().split(',');
-            filterdJobs = filterdJobs.filter(job => job.jobRole && roles.some(loc => loc && job?.jobRole?.toLowerCase().includes(loc)));
         }
 
         if (minexp) {
