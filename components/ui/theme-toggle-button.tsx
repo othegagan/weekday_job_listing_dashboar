@@ -6,7 +6,7 @@ export function ThemeToggle() {
 
     return (
         <>
-            <div className='flex gap-2' role='radiogroup'>
+            <div className='flex gap-2' >
                 <button
                     onClick={() => setTheme('dark')}
                     aria-label='Dark'

@@ -1,18 +1,26 @@
 'use client';
 
 import useJobSearch, { Job } from '@/hooks/useJobSearch';
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryState } from 'next-usequerystate';
+import { Suspense, useEffect, useState } from 'react';
+import JobSearch from './job-filters/JobSearchInput';
+import LocationFilter from './job-filters/LocationFilter';
 import JobCard from './JobCard';
 import { CardsSkeleton } from './ui/skleton';
-import JobSearch from './job-filters/JobSearchInput';
-import { useSearchParams } from 'next/navigation';
 
 export default function Jobs() {
-    const searchParams = useSearchParams();
-
     const [pageNumber, setPageNumber] = useState(9);
-    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+    const [searchTerm, setSearchTerm] = useQueryState('search', { defaultValue: '', history: 'replace' });
+    const [role, setRole] = useQueryState('role', { defaultValue: '', history: 'replace' });
+    const [location, setLocation] = useQueryState('location', { defaultValue: '', history: 'replace' });
+    const [minSalary, setMinSalary] = useQueryState('minsalary', { defaultValue: '', history: 'replace' });
+    const [maxSalary, setMaxSalary] = useQueryState('maxsalary', { defaultValue: '', history: 'replace' });
+    const [minExperience, setMinExperience] = useQueryState('minexp', { defaultValue: '', history: 'replace' });
+    const [maxExperience, setMaxExperience] = useQueryState('maxexp', { defaultValue: '', history: 'replace' });
+
     const { jobs, loading, error, hasMore } = useJobSearch(pageNumber);
+
+    const [filteredJobs, setFilteredJobs] = useState(jobs);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,38 +40,38 @@ export default function Jobs() {
         };
     }, [loading, hasMore]);
 
-    const filteredJobs = useMemo(() => {
-        if (!searchTerm) {
-            return jobs;
+    useEffect(() => {
+        fitlerJobs();
+    }, [searchTerm, location, role, jobs]);
+
+    const fitlerJobs = () => {
+        let filterdJobs = jobs;
+
+        if (searchTerm) {
+            filterdJobs = filterdJobs.filter(job => job.companyName.toLowerCase().includes(searchTerm.toLowerCase()));
         }
-        const fuzzyMatch = (text: string, search: string) => {
-            const searchLower = search.toLowerCase();
-            const textLower = text.toLowerCase();
-            let searchIndex = 0;
-            for (let charIndex = 0; charIndex < textLower.length; charIndex++) {
-                if (textLower[charIndex] === searchLower[searchIndex]) {
-                    searchIndex++;
-                }
-                if (searchIndex === searchLower.length) {
-                    return true;
-                }
-            }
-            return false;
-        };
-        return jobs.filter(
-            job =>
-                fuzzyMatch(job.companyName, searchTerm) ||
-                (job.location && fuzzyMatch(job.location, searchTerm)) ||
-                (job.jobRole && fuzzyMatch(job.jobRole, searchTerm)),
-        );
-    }, [jobs, searchTerm]);
+        if (location) {
+            const locations = location.toLowerCase().split(',');
+            filterdJobs = filterdJobs.filter(job => job.location && locations.some(loc => loc && job?.location?.toLowerCase().includes(loc)));
+        }
+        if (role) {
+            const roles = role.toLowerCase().split(',');
+            filterdJobs = filterdJobs.filter(job => job.jobRole && roles.some(loc => loc && job?.jobRole?.toLowerCase().includes(loc)));
+        }
+
+        setFilteredJobs(filterdJobs);
+    };
 
     return (
-        <div className='flex flex-col gap-3'>
-            {jobs.length}
-            <Suspense>
-                <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
-            </Suspense>
+        <>
+            <div className='sticky  top-[52px] z-[55] bg-white p-3 dark:bg-black'>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <div className='flex flex-wrap items-center w-full gap-4'>
+                        <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+                        <LocationFilter setLocation={setLocation} location={location} jobs={jobs} />
+                    </div>
+                </Suspense>
+            </div>
             <div className='grid grid-cols-1 gap-4 py-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:py-6'>
                 {filteredJobs.map((job: Job, index) => {
                     return <JobCard key={index} jobData={job} />;
@@ -72,8 +80,8 @@ export default function Jobs() {
 
             {loading && <CardsSkeleton />}
 
+            {!loading && !error && jobs && filteredJobs.length === 0 && <p>No jobs found matching your criteria.</p>}
             {!loading && error && <p> Something went wrong..! 😥 Please Try again.</p>}
-            {!loading && !error && filteredJobs.length === 0 && <p>No jobs found matching your criteria.</p>}
-        </div>
+        </>
     );
 }

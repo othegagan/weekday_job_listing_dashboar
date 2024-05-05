@@ -15,12 +15,7 @@ const JobCard = forwardRef<HTMLDivElement, JobCardProps>(({ jobData }, ref) => {
         <Card ref={ref} className='flex  flex-col gap-2 p-4 hover:shadow-md ' style={{ height: 'min-content' }}>
             <div className='flex w-full items-center justify-between'>
                 <div className='flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs tracking-tight dark:border-neutral-800'>
-                    <Clock3 className='size-3' /> Posted{' '}
-                    {(() => {
-                        const daysArray = [2, 5, 7, 10, 3];
-                        const days = daysArray[Math.floor(Math.random() * daysArray.length)];
-                        return `${days} day${days > 1 ? 's' : ''} ago`;
-                    })()}
+                    <Clock3 className='size-3' /> Posted {jobData.maxExp} days ago
                 </div>
 
                 {jobData.minExp && jobData.minExp > 0 && (

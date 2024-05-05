@@ -3,8 +3,10 @@ import { Suspense } from 'react';
 
 export default function Home() {
     return (
-        <Suspense>
-            <Jobs />
-        </Suspense>
+        <div className='py-4'>
+            <Suspense>
+                <Jobs />
+            </Suspense>
+        </div>
     );
 }
