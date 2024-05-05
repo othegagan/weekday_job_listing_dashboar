@@ -3,7 +3,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Job } from '@/hooks/useJobSearch';
 import { toTitleCase } from '@/lib/utils';
-import { MapPin } from 'lucide-react';
+import { ChevronDown, MapPin } from 'lucide-react';
 
 export default function LocationFilter({ setLocation, location, jobs }: { setLocation: (location: string) => void; location: string; jobs: Job[] }) {
     const handleCheckboxChange = (city: string) => {
@@ -20,8 +20,8 @@ export default function LocationFilter({ setLocation, location, jobs }: { setLoc
     return (
         <>
             <Popover>
-                <PopoverTrigger className='flex items-center gap-2 rounded-md border border-input px-3 h-9'>
-                    <MapPin className='size-3' /> Locations
+                <PopoverTrigger className='flex h-9 text-sm items-center gap-2 rounded-md border border-input px-3'>
+                    Locations <ChevronDown className='size-4' />
                 </PopoverTrigger>
                 <PopoverContent>
                     <div className='flex flex-wrap gap-4'>

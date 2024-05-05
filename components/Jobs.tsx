@@ -7,6 +7,7 @@ import JobSearch from './job-filters/JobSearchInput';
 import LocationFilter from './job-filters/LocationFilter';
 import JobCard from './JobCard';
 import { CardsSkeleton } from './ui/skleton';
+import ExperienceFilter from './job-filters/ExperienceFilter';
 
 export default function Jobs() {
     const [pageNumber, setPageNumber] = useState(9);
@@ -14,9 +15,7 @@ export default function Jobs() {
     const [role, setRole] = useQueryState('role', { defaultValue: '', history: 'replace' });
     const [location, setLocation] = useQueryState('location', { defaultValue: '', history: 'replace' });
     const [minSalary, setMinSalary] = useQueryState('minsalary', { defaultValue: '', history: 'replace' });
-    const [maxSalary, setMaxSalary] = useQueryState('maxsalary', { defaultValue: '', history: 'replace' });
-    const [minExperience, setMinExperience] = useQueryState('minexp', { defaultValue: '', history: 'replace' });
-    const [maxExperience, setMaxExperience] = useQueryState('maxexp', { defaultValue: '', history: 'replace' });
+    const [minexp, setMinexp] = useQueryState('minexp', { defaultValue: '', history: 'replace' });
 
     const { jobs, loading, error, hasMore } = useJobSearch(pageNumber);
 
@@ -42,7 +41,7 @@ export default function Jobs() {
 
     useEffect(() => {
         fitlerJobs();
-    }, [searchTerm, location, role, jobs]);
+    }, [searchTerm, location, role, jobs, minSalary, minexp]);
 
     const fitlerJobs = () => {
         let filterdJobs = jobs;
@@ -59,6 +58,11 @@ export default function Jobs() {
             filterdJobs = filterdJobs.filter(job => job.jobRole && roles.some(loc => loc && job?.jobRole?.toLowerCase().includes(loc)));
         }
 
+        if (minexp) {
+            const minExpNum = parseInt(minexp);
+            filterdJobs = filterdJobs.filter(job => job.minExp && job.minExp >= minExpNum);
+        }
+
         setFilteredJobs(filterdJobs);
     };
 
@@ -66,9 +70,10 @@ export default function Jobs() {
         <>
             <div className='sticky  top-[52px] z-[55] bg-white p-3 dark:bg-black'>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <div className='flex flex-wrap items-center w-full gap-4'>
+                    <div className='flex w-full flex-wrap items-center gap-4'>
                         <JobSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                         <LocationFilter setLocation={setLocation} location={location} jobs={jobs} />
+                        <ExperienceFilter setMinexp={setMinexp} minexp={minexp} />
                     </div>
                 </Suspense>
             </div>
